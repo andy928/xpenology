@@ -1,0 +1,91 @@
+if ARCH_FEROCEON_MV78XX0
+config MV78XX0
+	bool
+
+config MV632X
+	bool
+
+choice
+	prompt "Marvell SoC family"
+	default DDUO_FAMILY
+
+config  DDUO_FAMILY
+	bool "Discovery Duo SoC family"
+	select MV78XX0	
+	---help---
+	Discovery Duo SoC family
+
+config  MV632X_FAMILY
+	bool "88F632X SoC family"
+	select MV78XX0
+	select MV632X
+	---help---
+	88F632X SoC family
+
+endchoice
+
+if DDUO_FAMILY
+choice
+	prompt "Discovery Duo SoC"
+	default MV78100
+
+config  MV78100
+	bool "MV78100 SoC"
+	---help---
+	MV78100 SoC
+
+config  MV78200
+	bool "MV78200 SoC" 
+	---help---
+	MV78200 SoC (Dual CPU AMP)
+
+config  MV76100
+	bool "MV76100 SoC"	
+	---help---
+	MV76100 SoC
+endchoice
+endif
+
+if MV632X_FAMILY
+choice
+	prompt "88F632X SoC"
+	default MV6323
+
+config  MV6321
+	bool "88F6321 SoC"	
+	---help---
+	88F6321 SoC
+
+config  MV6322
+	bool "88F6322 SoC"
+	---help---
+	88F6322 SoC
+
+config  MV6323
+	bool "88F6323 SoC"
+	---help---
+	88F6323 SoC
+endchoice
+endif
+
+config  MV78XX0_Z0	
+	bool "Support for MV78XX0 Z0"
+	depends on DDUO_FAMILY && !MV76100
+	---help---
+	Choosing this option will generate a linux kernel for the MV78XX0 SoC step Z0
+
+config MV78XX0_SUPPORT_2GB_RAM
+	bool "Support 2GB of DRAM"
+	depends on MV78XX0
+	---help---
+	Support 2GB of DRAM
+
+config USB_PHY_OVERRIDE_SETTINGS
+	bool "Override USB PHY settings"
+	default n
+	depends on MV78XX0 && USB
+	---help---
+	Override U-Boot USB PHY settings
+
+endif
+

@@ -1,0 +1,40 @@
+menu "Telephony options"
+	depends on MV_INCLUDE_TDM
+
+config  MV_PHONE
+	tristate "Support for Marvell telephony(VoIP)"
+	depends on MV_INCLUDE_TDM && PHONE
+	default y
+	---help---
+	  Choosing this option enables the Marvell telephony underlying 
+	  support for various VoIP applications. 
+	  Note, kernel Telephony subsystem must be chosen too.
+
+choice 
+	prompt "TDM unit"
+	depends on MV_PHONE
+
+config MV_TDM_2CHANNELS
+	bool "Support legacy TDM unit(2 channels)"
+
+config MV_TDM_32CHANNELS
+	bool "Support FlexTDM unit(up to 32 channels)"
+
+endchoice
+
+config MV_TDM_USE_EXTERNAL_PCLK_SOURCE
+	bool "Support PCLK from external source"
+	depends on MV_PHONE
+	default n
+	---help---
+	Choosing this option enables TDM unit to use PCLK supplied by external source.
+
+config MV_PHONE_TEST_MODULE
+	tristate "Support phone testing module"
+	depends on MV_PHONE
+	help
+	  Phone test module supports several basic telephony tests for Marvell TDM based platforms. 
+
+endmenu
+
+

@@ -1,0 +1,87 @@
+config MV_XOR_NET_DMA
+        bool "Use the XOR engine as NET DMA"
+        depends on NET_DMA && NOT_SUPPORTED
+        default n
+        help
+          Invokes XOR as NET DMA engine
+
+config MV_USE_XOR_ENGINE
+        bool "Use the XOR engines to offload CPU tasks"   
+        depends on (MV_INCLUDE_XOR) && EXPERIMENTAL
+        default n
+        help
+            Say Y of you want to use the XOR engine to offload some of the 
+            CPU tasks.
+
+config MV_XOR_MEMCOPY
+        bool "Use the XOR engine to accelerate memcpy()"
+        depends on MV_USE_XOR_ENGINE
+        default n
+        help
+          Say Y here if you want to use the XOR engine to perform
+          the memcpy and memmove.
+
+config MV_XOR_MEMCOPY_THRESHOLD
+        int "Minimum number of bytes to use XOR acceleration for memcpy()"
+        depends on MV_XOR_MEMCOPY
+        default "128"
+        help
+          This is the minimum buffer size needed in order to operate the XOR engine
+          for accelerating the memcpy() operations
+
+config MV_XOR_MEMXOR
+        bool "Use the XOR engine to perform xor bitmap calculations"
+        depends on MV_USE_XOR_ENGINE
+        default n
+        help
+          Say Y to accelerate the RAID4/5 xor bitmap calculations.
+
+config MV_XOR_MEMXOR_THRESHOLD
+        int "Minimum number of bytes to perform xor bitmap calculations"
+        depends on MV_XOR_MEMXOR
+        default "4096"
+        help
+          This is the minimum buffer size to operate the XOR engine
+          for xor bitmap operations
+
+config MV_XOR_COPY_TO_USER
+	bool "Use XOR hardware to accelerate copy_to_user function"
+	depends on MV_USE_XOR_ENGINE
+	default n
+	help
+	  Say Y here to accelerate the copy_to_user function
+
+config MV_XOR_COPY_TO_USER_THRESHOLD
+        int "A threshold to employ XOR hardware for copy_to_user()"
+        depends on MV_XOR_COPY_TO_USER
+        default "1260"
+        help
+          This is the minimum buffer size required to operate XOR engine
+          to accelerate the copy_to_user() operation.
+
+config MV_XOR_COPY_FROM_USER
+	bool "Use XOR hardware to accelerate copy_from_user function"
+	depends on MV_USE_XOR_ENGINE
+	default n
+	help
+	  Say Y here to accelerate the copy_from_user function
+
+config MV_XOR_COPY_FROM_USER_THRESHOLD
+        int "A threshold to employ XOR hardware for copy_from_user()"
+        depends on MV_XOR_COPY_FROM_USER
+        default "1260"
+        help
+          This is the minimum buffer size required to operate XOR engine
+          to accelerate the copy_from_user() operation.
+
+config MV_XOR_CHANNELS
+        int "Number of XOR channels"
+        depends on MV_USE_XOR_ENGINE
+        range 1 4
+        default 2
+	help
+	  Select the number of XOR channels to be used for kernel functions
+	  accelerations.
+#endmenu
+
+##source	"drivers/dma/Kconfig"

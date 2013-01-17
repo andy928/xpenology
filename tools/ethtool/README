@@ -1,0 +1,3 @@
+
+ethtool-6-mrv-2.patch - this patch should be use against the user-space utility ethtool-6 in order
+to have diagnostic and tuning capabilities for Marvell integrated GbE controller.

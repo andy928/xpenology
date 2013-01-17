@@ -1,0 +1,10 @@
+#
+# Synology Library configuration
+#
+
+config SYNO_CROND
+	bool "Synology kernel micro crontab"
+	help
+		this crond implementation depends on jiffies, so the degree of accuracy only has 31-bit.
+		Each platform may have different max time interval because of various HZ.
+

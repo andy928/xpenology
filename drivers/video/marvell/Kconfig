@@ -1,0 +1,175 @@
+config FB_DOVE
+	bool "Marvell LCD controller"
+	depends on FB && (ARCH_DOVE || ARCH_FEROCEON_KW)
+	help
+	  Support for Marvell Dove SoC LCD controller.
+
+config FB_DOVE_CONSISTENT_DMA_SIZE
+	int "Consistent DMA memory size (MB)"
+	depends on FB_DOVE && (FB_DOVE_CLCD || FB_DOVE_CLCD1)
+	range 2 46
+	default 46
+	help
+	  Increase the DMA consistent memory size according to your video
+	  memory needs.
+	  The size must be 2MB aligned.
+
+config FB_DOVE_CLCD
+	tristate "Marvell DOVE Color LCD support"
+	depends on FB && ARM && FB_DOVE
+	select FB_CFB_FILLRECT
+	select FB_CFB_COPYAREA
+	select FB_CFB_IMAGEBLIT
+	---help---
+	Marvell DOVE Color LCD. If not sure, say N. If want to config 
+	resolution, please use bootargs, e.g. dovefb:640x480-16@60.
+
+config FB_DOVE_CLCD1
+	tristate "Marvell DOVE Secondary Color LCD support"
+	depends on FB && ARM && FB_DOVE
+	select FB_CFB_FILLRECT
+	select FB_CFB_COPYAREA
+	select FB_CFB_IMAGEBLIT
+	select FB_DOVE_DCON
+	---help---
+	Say Y here if your Secondary LCD panel is VGA. Default is N.
+config FB_DOVE_CLCD_EDID
+	bool "Marvell DOVE read EDID utility"
+	depends on FB_DOVE
+	select I2C
+	select I2C_MV64XXX
+	select FB_DDC
+	select FB_MODE_HELPERS
+	---help---
+	Enable reading the EDID information of the screen. Default is N.
+
+config DOVEFB_FORCE_EDID_RES
+	bool "Change resolution to match EDID info"
+	depends on FB_DOVE_CLCD_EDID
+	---help---
+	Perform a check on configured resolutions to match screen's EDID information.
+
+config FB_DOVE_DCON
+	tristate "Marvell DOVE DCON support"
+	depends on ARM && FB_DOVE
+	---help---
+	Say Y here if want to enable DCON. (HW default bypass.)
+
+choice
+	depends on FB_DOVE && FB_DOVE_DCON
+	prompt "DOVE DCON Panel PortA" 
+	default FB_DOVE_CLCD_DCONA_BYPASS
+
+config FB_DOVE_CLCD_DCONA_BYPASS
+	bool "LCD0 Bypass"
+	help
+	  Marvell DOVE DCON LCD0 Bypass mode. Default is Y.
+
+config FB_DOVE_CLCD_DCONA_OLPC
+	bool "OLPC DCON Mode(Not support now)"
+	help
+	  Say Y here if your DCON is OLPC mode. Default is N.
+
+config FB_DOVE_CLCD_DCONA_DUALVIEW
+	bool "LCD0/1 dual view Mode(Not support now)"
+	help
+	  Say Y here if you have two LCD panel. Default is N.
+
+config FB_DOVE_CLCD_DCONA_MODE
+	bool "DCON Mode, LCD0 data (Not support now)"
+	help
+	  Say Y here if your DCON is DCON mode. Default is N.
+
+endchoice
+
+choice
+	depends on FB_DOVE && FB_DOVE_DCON
+	prompt "DOVE DCON Panel PortB"
+	default FB_DOVE_CLCD_DCONB_BYPASS1
+
+config FB_DOVE_CLCD_DCONB_BYPASS1
+	bool "LCD1 Bypass"
+	help
+	  Marvell DOVE DCON LCD1 Bypass mode. Default is Y.
+
+config FB_DOVE_CLCD_DCONB_BYPASS0
+	bool "LCD0 Bypass"
+	help
+	  Say Y here if your DCON is bypass LCD0. Default is N.
+
+endchoice
+
+menu "DOVE LCD clock source"
+	depends on FB_DOVE && (FB_DOVE_CLCD || FB_DOVE_CLCD1)
+
+config FB_DOVE_CLCD_USE_PLL_CLK
+	bool "Use PLL to be LCD's sclk input"
+	depends on FB_DOVE_CLCD || FB_DOVE_CLCD1
+	---help---
+	choose PLL to be LCD sclk input, otherwise use AXI bus clock.
+
+config FB_DOVE_CLCD_SCLK_VALUE
+	int "LCD SCLK setting"
+	default "266"
+	depends on (FB_DOVE_CLCD || FB_DOVE_CLCD1)
+	---help---
+	This paramter (in MHz) determines the source clock rate.
+	The default is 266MHz(PLL). The real frquency depends on HW
+	setting. Change this if you know how to set it.
+
+endmenu
+
+config FB_DOVE_OPTIMIZED_FB_MEM_ALLOC
+	bool "Use performance optimized memory allocations"
+	depends on FB_DOVE
+	default false
+	---help---
+	Enable performance optimized memory allocations for LCD frame-buffers.
+	This option will reserve the last DRAM Chip-Select for LCD usage.
+
+config FB_DOVE_CLCD_DEFAULT_OPTION
+	string "Default Dove FB kernel parameter"
+	depends on FB_DOVE && (FB_DOVE_CLCD || FB_DOVE_CLCD1)
+	default "lcd0:1280x768-24@60,lcd1:1024x768-16@60"
+
+config DOVEFB_DISPLAY_MODE
+	tristate "Support display configuration."
+	depends on FB_DOVE && FB_DOVE_CLCD && FB_DOVE_CLCD1
+	default n if (ARCH_DOVE || ARCH_FEROCEON_KW)
+	---help---
+	Say Y here if you want to build driver into kernel. Default is N.
+
+config FB_DOVE_CLCD_FLAREON_GV
+	tristate "Marvell DOVE Color LCD - Flareon GV"
+	depends on FB_DOVE && (FB_DOVE_CLCD || FB_DOVE_CLCD1)
+	default y if ARCH_REALVIEW
+	---help---
+	Say Y here if your LCD version is on Flareon GV. Default is N.
+
+## Following is for MUSTANG LCD config
+config FB_MUSTANG_CLCD
+    tristate "Marvell Mustang Color LCD support"
+    default n
+    depends on FB_DOVE
+    select FB_CFB_FILLRECT
+    select FB_CFB_COPYAREA
+    select FB_CFB_IMAGEBLIT
+    ---help---
+    Marvell Mustang Color LCD. If not sure, say N.
+
+config FB_MUSTANG_QVGA
+    bool "Marvell Mustang Color LCD - QVGA"
+    default n
+    depends on FB_MUSTANG_CLCD
+    ---help---
+       Say Y here if your LCD panel is QVGA. Default is N.
+config FB_MUSTANG_LOW_REFLESH_RATE
+	bool "Lower Reflesh Rate of LCD DMA"
+	default n
+	depends on FB_MUSTANG_CLCD
+	help
+	  Say Y if you are using Tahoe FPGA System
+	  It will slow down to 1/2 original LCD  refresh rate
+## End of MUSTANG LCD config
+
+

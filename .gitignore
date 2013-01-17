@@ -55,6 +55,7 @@ modules.builtin
 #
 !.gitignore
 !.mailmap
+!.config
 
 #ignore CVS control file
 CVS

@@ -1603,13 +1603,14 @@ static void compat_ioctl_error(struct file *filp, unsigned int fd,
 	 sprintf(buf,"'%c'", (cmd>>_IOC_TYPESHIFT) & _IOC_TYPEMASK);
 	if (!isprint(buf[1]))
 		sprintf(buf, "%02x", buf[1]);
+#ifndef XPENOLOGY
 	compat_printk("ioctl32(%s:%d): Unknown cmd fd(%d) "
 			"cmd(%08x){t:%s;sz:%u} arg(%08x) on %s\n",
 			current->comm, current->pid,
 			(int)fd, (unsigned int)cmd, buf,
 			(cmd >> _IOC_SIZESHIFT) & _IOC_SIZEMASK,
 			(unsigned int)arg, fn);
-
+#endif
 	if (path)
 		free_page((unsigned long)path);
 }

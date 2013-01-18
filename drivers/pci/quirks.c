@@ -616,7 +616,9 @@ u32 syno_pch_lpc_gpio_pin(int pin, int *pValue, int isWrite)
          ( pin < 0 || pin >= 96 ) ||
          NULL == pValue )
     {
+#ifndef XPENOLOGY
         printk("parameter error. gpiobase=%08X, pin=%d, pValue=%p\n", gpiobase, pin, pValue);
+#endif /* XPENOLOGY */
         goto END;
     }
     

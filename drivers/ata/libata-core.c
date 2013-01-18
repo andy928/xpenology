@@ -7368,7 +7368,7 @@ int (*funcSYNOSendDiskPortDisEvent)(unsigned int, unsigned int) = NULL;
 EXPORT_SYMBOL(funcSYNOSendDiskPortDisEvent);
 #endif /* MY_ABC_HERE */
 
-#ifdef (defined(MY_DEF_HERE) || defined(XPENOLOGY))
+#if (defined(MY_DEF_HERE) || defined(XPENOLOGY))
 int (*funcSYNOSendEboxRefreshEvent)(int portIndex) = NULL;
 EXPORT_SYMBOL(funcSYNOSendEboxRefreshEvent);
 #endif

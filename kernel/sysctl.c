@@ -222,7 +222,7 @@ EXPORT_SYMBOL(g_esata_7042);
 int (*funcSYNOGetHwCapability)(CAPABILITY *) = NULL;
 EXPORT_SYMBOL(funcSYNOGetHwCapability);
 
-#ifdef (defined(MY_DEF_HERE) || defined(XPENOLOGY))
+#if (defined(MY_DEF_HERE) || defined(XPENOLOGY))
 EUNIT_PWRON_TYPE (*funcSynoEunitPowerctlType)(void) = NULL;
 EXPORT_SYMBOL(funcSynoEunitPowerctlType);
 #endif

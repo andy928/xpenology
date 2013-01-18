@@ -3659,6 +3659,7 @@ static void syno_mv_phy_ctl(void __iomem *port_mmio, u8 blShutdown)
 /*FIXME - Too brutal and directly, should separate into levels*/
 void syno_sata_mv_gpio_write(u8 blFaulty, const unsigned short hostnum)
 {
+#ifndef XPENOLOGY
 	struct Scsi_Host *shost = scsi_host_lookup(hostnum);
 	struct ata_port *ap = NULL;
 	void __iomem *host_mmio = NULL;
@@ -3691,9 +3692,10 @@ void syno_sata_mv_gpio_write(u8 blFaulty, const unsigned short hostnum)
 
 	writel(gpio_value, host_mmio + GPIO_CTL_DATA);
 	scsi_host_put(shost);
-
+#endif /* XPENOLOGY */
 END:
 	return;
+
 }
 EXPORT_SYMBOL(syno_sata_mv_gpio_write);
 #endif
